@@ -15,7 +15,7 @@ void insertNode(Nd_t *Ndp);
 Nd_t *head = NULL;
 Nd_t *tail = NULL;
 
-# define NUM 10
+# define NUM 11
 
 struct Node * allocatePool(void) 
 {
