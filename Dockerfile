@@ -1,11 +1,17 @@
 FROM alpine:latest
 
-# Install debootstrap and dependencies
-RUN apk add --no-cache debootstrap wget gpg
+# Install nginx, debootstrap, and bash
+RUN apk add --no-cache nginx debootstrap bash wget gpg
 
-# Create Ubuntu rootfs inside Alpine container
-RUN mkdir /ubuntu && \
+# Create directory for Ubuntu rootfs (if needed for nested purposes)
+RUN mkdir -p /ubuntu && \
     debootstrap --arch=amd64 focal /ubuntu http://archive.ubuntu.com/ubuntu/
 
-# Set the default shell to bash inside the Ubuntu chroot (optional)
-CMD ["/ubuntu/bin/bash"]
+# Copy custom index.html to nginx default root
+COPY index.html /var/www/localhost/htdocs/index.html
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]
