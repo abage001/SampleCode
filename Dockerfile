@@ -10,6 +10,9 @@ RUN mkdir -p /ubuntu && \
 # Copy custom index.html to nginx default root
 COPY index.html /var/www/localhost/htdocs/index.html
 
+# Overwrite default config with our custom nginx.conf
+COPY nginx.conf /etc/nginx/http.d/default.conf
+
 # Expose port 80
 EXPOSE 80
 
