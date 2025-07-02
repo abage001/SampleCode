@@ -8,7 +8,7 @@ RUN apt-get update && \
         debootstrap \
         bash \
         wget \
-        gnupg && \
+        gnupg 
   
 
 # Install nginx and curl
