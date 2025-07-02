@@ -2,13 +2,19 @@ FROM bitnami/nginx:1.29.0-debian-12-r2
 
 # Install nginx, debootstrap, and bash
 #RUN apk add --no-cache nginx debootstrap bash wget gpg
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-        curl \
+# Prevents TTY/input prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        nginx \
         debootstrap \
+        curl \
         bash \
         wget \
-        gnupg 
+        gnupg && \
+    rm -rf /var/lib/apt/lists/*
   
 
 # Install nginx and curl
