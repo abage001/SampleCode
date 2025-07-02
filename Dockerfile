@@ -1,20 +1,8 @@
-FROM debian:12-slim
+FROM alpine:latest
 # Install nginx, debootstrap, and bash
-#RUN apk add --no-cache nginx debootstrap bash wget gpg
+RUN apk add --no-cache nginx debootstrap bash wget gpg curl 
 # Prevents TTY/input prompts
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Install required packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        nginx \
-        debootstrap \
-        curl \
-        bash \
-        wget \
-        gnupg && \
-    rm -rf /var/lib/apt/lists/*
-  
 
 # Create directory for Ubuntu rootfs (if needed for nested purposes)
 RUN mkdir -p /ubuntu && \
@@ -27,8 +15,8 @@ COPY index.html /usr/share/nginx/html/index.html
 
 # Overwrite default config with our custom nginx.conf
 COPY nginx.conf /etc/nginx/http.d/default.conf
-
-
+# Display index.html 
+RUN cat /usr/share/nginx/html/index.html
 
 # Expose port 80
 EXPOSE 80
