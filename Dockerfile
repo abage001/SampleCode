@@ -1,5 +1,4 @@
-FROM bitnami/nginx:1.29.0-debian-12-r2
-
+FROM debian:12-slim
 # Install nginx, debootstrap, and bash
 #RUN apk add --no-cache nginx debootstrap bash wget gpg
 # Prevents TTY/input prompts
@@ -17,12 +16,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
   
 
-# Install nginx and curl
-#RUN apk add --no-cache nginx curl
-
 # Create directory for Ubuntu rootfs (if needed for nested purposes)
 RUN mkdir -p /ubuntu && \
     debootstrap --arch=amd64 focal /ubuntu http://archive.ubuntu.com/ubuntu/
+COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /usr/share/nginx/html
 # Copy custom index.html to nginx default root
 COPY index.html /var/www/localhost/htdocs/index.html
