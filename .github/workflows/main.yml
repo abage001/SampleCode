@@ -29,4 +29,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ubuntu-on-alpine:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-nginx-debian:latest
