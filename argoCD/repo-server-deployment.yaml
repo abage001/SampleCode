@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-cd-1758916987-repo-server
+  namespace: default
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/instance: argo-cd-1758916987
+    app.kubernetes.io/name: argo-cd
+    app.kubernetes.io/version: 3.0.13
+    helm.sh/chart: argo-cd-10.0.4
+  annotations:
+    deployment.kubernetes.io/revision: '2'
+    meta.helm.sh/release-name: argo-cd-1758916987
+    meta.helm.sh/release-namespace: default
+  selfLink: /apis/apps/v1/namespaces/default/deployments/argo-cd-1758916987-repo-server
+status:
+  replicas: 1
+  conditions:
+    - type: Progressing
+      status: 'True'
+    - type: Available
+      status: 'True'
+      reason: MinimumReplicasAvailable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: repo-server
+      app.kubernetes.io/instance: argo-cd-1758916987
+      app.kubernetes.io/name: argo-cd
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: repo-server
+        app.kubernetes.io/instance: argo-cd-1758916987
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: argo-cd
+        app.kubernetes.io/version: 3.0.13
+        helm.sh/chart: argo-cd-10.0.4
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2025-09-29T18:49:14.557Z'
+    spec:
+      volumes:
+        - name: ssh-known-hosts
+          configMap:
+            name: argocd-ssh-known-hosts-cm
+            defaultMode: 420
+        - name: argocd-repo-server-tls
+          secret:
+            secretName: argocd-repo-server-tls
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+              - key: ca.crt
+                path: ca.crt
+            defaultMode: 420
+            optional: true
+        - name: empty-dir
+          emptyDir: {}
+      initContainers:
+        - name: wait-for-redis
+          image: docker.io/bitnami/redis:8.2.1-debian-12-r0
+          command:
+            - /bin/bash
+          args:
+            - '-ec'
+            - |
+              #!/bin/bash

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-redis
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"creationTimestamp":"2025-09-27T01:22:12Z","finalizers":["kubernetes.io/pv-protection"],"name":"pv-redis","selfLink":"/api/v1/persistentvolumes/pv-redis","uid":"0f8122e5-9cc7-4632-b700-8aaacf17c919"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"8Gi"},"local":{"path":"/mnt/redis-master"},"nodeAffinity":{"required":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/hostname","operator":"In","values":["ubuntu-25-003","ubuntu-25-002"]}]}]}},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"local-storage","volumeMode":"Filesystem"}}
+    pv.kubernetes.io/bound-by-controller: 'yes'
+  finalizers:
+    - kubernetes.io/pv-protection
+  selfLink: /api/v1/persistentvolumes/pv-redis
+status:
+  phase: Bound
+spec:
+  capacity:
+    storage: 8Gi
+  local:
+    path: /mnt/redis-master
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    kind: PersistentVolumeClaim
+    namespace: default
+    name: redis-data-argo-cd-1758916987-redis-master-0
+    apiVersion: v1
+    resourceVersion: '392151'
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  volumeMode: Filesystem
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - ubuntu-25-003
+                - ubuntu-25-002

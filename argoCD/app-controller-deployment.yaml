@@ -1,0 +1,227 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-cd-1758916987-app-controller
+  namespace: default
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: argo-cd-1758916987
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argo-cd
+    app.kubernetes.io/version: 3.0.13
+    helm.sh/chart: argo-cd-10.0.4
+  annotations:
+    deployment.kubernetes.io/revision: '2'
+    meta.helm.sh/release-name: argo-cd-1758916987
+    meta.helm.sh/release-namespace: default
+  selfLink: >-
+    /apis/apps/v1/namespaces/default/deployments/argo-cd-1758916987-app-controller
+status:
+  replicas: 1
+  conditions:
+    - type: Progressing
+      status: 'True'
+      reason: NewReplicaSetAvailable
+    - type: Available
+      status: 'True'
+      reason: MinimumReplicasAvailable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: argo-cd-1758916987
+      app.kubernetes.io/name: argo-cd
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: argo-cd-1758916987
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: argo-cd
+        app.kubernetes.io/version: 3.0.13
+        helm.sh/chart: argo-cd-10.0.4
+      annotations:
+        kubectl.kubernetes.io/restartedAt: '2025-09-29T18:49:06.505Z'
+    spec:
+      volumes:
+        - name: empty-dir
+          emptyDir: {}
+        - name: argocd-repo-server-tls
+          secret:
+            secretName: argocd-repo-server-tls
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+              - key: ca.crt
+                path: ca.crt
+            defaultMode: 420
+            optional: true
+      initContainers:
+        - name: wait-for-redis
+          image: docker.io/bitnami/redis:8.2.1-debian-12-r0
+          command:
+            - /bin/bash
+          args:
+            - '-ec'
+            - |
+              #!/bin/bash
+
+              set -o errexit
+              set -o nounset
+              set -o pipefail
+
+              . /opt/bitnami/scripts/libos.sh
+              . /opt/bitnami/scripts/liblog.sh
+
+              check_redis_connection() {
+                local result="$(redis-cli -h argo-cd-1758916987-redis-master -p 6379  PING)"
+                if [[ "$result" != "PONG" ]]; then
+                  false
+                fi
+              }
+
+              info "Checking redis connection..."
+              if ! retry_while "check_redis_connection"; then
+                  error "Could not connect to the Redis server"
+                  return 1
+              else
+                  info "Connected to the Redis instance"
+              fi
+          env:
+            - name: REDISCLI_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: argo-cd-1758916987-redis
+                  key: redis-password
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            seLinuxOptions: {}
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+      containers:
+        - name: controller
+          image: docker.io/bitnami/argo-cd:3.0.13-debian-12-r0
+          args:
+            - argocd-application-controller
+            - '--status-processors'
+            - '20'
+            - '--operation-processors'
+            - '10'
+            - '--app-resync'
+            - '180'
+            - '--self-heal-timeout-seconds'
+            - '5'
+            - '--repo-server'
+            - argo-cd-1758916987-repo-server:8081
+            - '--logformat'
+            - text
+            - '--loglevel'
+            - info
+            - '--metrics-port=8082'
+            - '--redis'
+            - argo-cd-1758916987-redis-master:6379
+          ports:
+            - name: metrics
+              containerPort: 8082
+              protocol: TCP
+          env:
+            - name: ARGOCD_APPLICATION_CONTROLLER_NAME
+              value: argo-cd-1758916987-app-controller
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: argo-cd-1758916987-redis
+                  key: redis-password
+          resources:
+            limits:
+              cpu: 375m
+              ephemeral-storage: 2Gi
+              memory: 384Mi
+            requests:
+              cpu: 250m
+              ephemeral-storage: 50Mi
+              memory: 256Mi
+          volumeMounts:
+            - name: argocd-repo-server-tls
+              mountPath: /app/config/server/tls
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: metrics
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            seLinuxOptions: {}
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: argo-cd-1758916987-argocd-app-controller
+      serviceAccount: argo-cd-1758916987-argocd-app-controller
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: controller
+                    app.kubernetes.io/instance: argo-cd-1758916987
+                    app.kubernetes.io/name: argo-cd
+                topologyKey: kubernetes.io/hostname
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

@@ -1,0 +1,205 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: argo-cd-1758916987-redis-master
+  namespace: default
+  labels:
+    app.kubernetes.io/component: master
+    app.kubernetes.io/instance: argo-cd-1758916987
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/version: 8.2.1
+    helm.sh/chart: redis-22.0.5
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{"meta.helm.sh/release-name":"argo-cd-1758916987","meta.helm.sh/release-namespace":"default"},"creationTimestamp":"2025-09-26T20:03:42Z","generation":1,"labels":{"app.kubernetes.io/component":"master","app.kubernetes.io/instance":"argo-cd-1758916987","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"redis","app.kubernetes.io/version":"8.2.1","helm.sh/chart":"redis-22.0.5"},"name":"argo-cd-1758916987-redis-master","namespace":"default","selfLink":"/apis/apps/v1/namespaces/default/statefulsets/argo-cd-1758916987-redis-master","uid":"e00ff19c-4ab0-48c3-8aa7-0a45c7bd0822"},"spec":{"persistentVolumeClaimRetentionPolicy":{"whenDeleted":"Retain","whenScaled":"Retain"},"podManagementPolicy":"OrderedReady","replicas":1,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app.kubernetes.io/component":"master","app.kubernetes.io/instance":"argo-cd-1758916987","app.kubernetes.io/name":"redis"}},"serviceName":"argo-cd-1758916987-redis-headless","template":{"metadata":{"annotations":{"checksum/configmap":"2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb","checksum/health":"aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9","checksum/scripts":"0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e","checksum/secret":"bd6e855ce94ee5c9618257193bbcb6bd648849893dd2cb04c7c2e1c884b4e089"},"creationTimestamp":null,"labels":{"app.kubernetes.io/component":"master","app.kubernetes.io/instance":"argo-cd-1758916987","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"redis","app.kubernetes.io/version":"8.2.1","helm.sh/chart":"redis-22.0.5"}},"spec":{"affinity":{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app.kubernetes.io/component":"master","app.kubernetes.io/instance":"argo-cd-1758916987","app.kubernetes.io/name":"redis"}},"topologyKey":"kubernetes.io/hostname"},"weight":1}]}},"automountServiceAccountToken":false,"containers":[{"args":["-ec","/opt/bitnami/scripts/start-scripts/start-master.sh"],"command":["/bin/bash"],"env":[{"name":"BITNAMI_DEBUG","value":"false"},{"name":"REDIS_REPLICATION_MODE","value":"master"},{"name":"ALLOW_EMPTY_PASSWORD","value":"no"},{"name":"REDIS_PASSWORD_FILE","value":"/opt/bitnami/redis/secrets/redis-password"},{"name":"REDIS_TLS_ENABLED","value":"no"},{"name":"REDIS_PORT","value":"6379"}],"image":"docker.io/bitnami/redis:8.2.1-debian-12-r0","imagePullPolicy":"IfNotPresent","livenessProbe":{"exec":{"command":["/bin/bash","-ec","/health/ping_liveness_local.sh
+      5"]},"failureThreshold":5,"initialDelaySeconds":20,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":6},"name":"redis","ports":[{"containerPort":6379,"name":"redis","protocol":"TCP"}],"readinessProbe":{"exec":{"command":["/bin/bash","-ec","/health/ping_readiness_local.sh
+      1"]},"failureThreshold":5,"initialDelaySeconds":20,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":2},"resources":{"limits":{"cpu":"150m","ephemeral-storage":"2Gi","memory":"192Mi"},"requests":{"cpu":"100m","ephemeral-storage":"50Mi","memory":"128Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":1001,"runAsNonRoot":true,"runAsUser":1001,"seLinuxOptions":{},"seccompProfile":{"type":"RuntimeDefault"}},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/opt/bitnami/scripts/start-scripts","name":"start-scripts"},{"mountPath":"/health","name":"health"},{"mountPath":"/opt/bitnami/redis/secrets/","name":"redis-password"},{"mountPath":"/data","name":"redis-data"},{"mountPath":"/opt/bitnami/redis/mounted-etc","name":"config"},{"mountPath":"/opt/bitnami/redis/etc/","name":"empty-dir","subPath":"app-conf-dir"},{"mountPath":"/tmp","name":"empty-dir","subPath":"tmp-dir"}]}],"dnsPolicy":"ClusterFirst","enableServiceLinks":true,"restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{"fsGroup":1001,"fsGroupChangePolicy":"Always"},"serviceAccount":"argo-cd-1758916987-redis-master","serviceAccountName":"argo-cd-1758916987-redis-master","terminationGracePeriodSeconds":30,"volumes":[{"configMap":{"defaultMode":493,"name":"argo-cd-1758916987-redis-scripts"},"name":"start-scripts"},{"configMap":{"defaultMode":493,"name":"argo-cd-1758916987-redis-health"},"name":"health"},{"name":"redis-password","secret":{"defaultMode":420,"items":[{"key":"redis-password","path":"redis-password"}],"secretName":"argo-cd-1758916987-redis"}},{"configMap":{"defaultMode":420,"name":"argo-cd-1758916987-redis-configuration"},"name":"config"},{"emptyDir":{},"name":"empty-dir"}]}},"updateStrategy":{"type":"RollingUpdate"},"volumeClaimTemplates":[{"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"creationTimestamp":null,"labels":{"app.kubernetes.io/component":"master","app.kubernetes.io/instance":"argo-cd-1758916987","app.kubernetes.io/name":"redis"},"name":"redis-data"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"8Gi"}},"storageClassName":"local-storage","volumeMode":"Filesystem"},"status":{"phase":"Pending"}}]}}
+    meta.helm.sh/release-name: argo-cd-1758916987
+    meta.helm.sh/release-namespace: default
+  selfLink: >-
+    /apis/apps/v1/namespaces/default/statefulsets/argo-cd-1758916987-redis-master
+status:
+  observedGeneration: 1
+  replicas: 1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: master
+      app.kubernetes.io/instance: argo-cd-1758916987
+      app.kubernetes.io/name: redis
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: master
+        app.kubernetes.io/instance: argo-cd-1758916987
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/version: 8.2.1
+        helm.sh/chart: redis-22.0.5
+      annotations:
+        checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
+        checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
+        checksum/scripts: 0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e
+        checksum/secret: bd6e855ce94ee5c9618257193bbcb6bd648849893dd2cb04c7c2e1c884b4e089
+    spec:
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: argo-cd-1758916987-redis-scripts
+            defaultMode: 493
+        - name: health
+          configMap:
+            name: argo-cd-1758916987-redis-health
+            defaultMode: 493
+        - name: redis-password
+          secret:
+            secretName: argo-cd-1758916987-redis
+            items:
+              - key: redis-password
+                path: redis-password
+            defaultMode: 420
+        - name: config
+          configMap:
+            name: argo-cd-1758916987-redis-configuration
+            defaultMode: 420
+        - name: empty-dir
+          emptyDir: {}
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:8.2.1-debian-12-r0
+          command:
+            - /bin/bash
+          args:
+            - '-ec'
+            - /opt/bitnami/scripts/start-scripts/start-master.sh
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          env:
+            - name: BITNAMI_DEBUG
+              value: 'false'
+            - name: REDIS_REPLICATION_MODE
+              value: master
+            - name: ALLOW_EMPTY_PASSWORD
+              value: 'no'
+            - name: REDIS_PASSWORD_FILE
+              value: /opt/bitnami/redis/secrets/redis-password
+            - name: REDIS_TLS_ENABLED
+              value: 'no'
+            - name: REDIS_PORT
+              value: '6379'
+          resources:
+            limits:
+              cpu: 150m
+              ephemeral-storage: 2Gi
+              memory: 192Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 50Mi
+              memory: 128Mi
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-password
+              mountPath: /opt/bitnami/redis/secrets/
+            - name: redis-data
+              mountPath: /data
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: empty-dir
+              mountPath: /opt/bitnami/redis/etc/
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - '-ec'
+                - /health/ping_liveness_local.sh 5
+            initialDelaySeconds: 20
+            timeoutSeconds: 6
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - '-ec'
+                - /health/ping_readiness_local.sh 1
+            initialDelaySeconds: 20
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            seLinuxOptions: {}
+            runAsUser: 1001
+            runAsGroup: 1001
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: argo-cd-1758916987-redis-master
+      serviceAccount: argo-cd-1758916987-redis-master
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: master
+                    app.kubernetes.io/instance: argo-cd-1758916987
+                    app.kubernetes.io/name: redis
+                topologyKey: kubernetes.io/hostname
+      schedulerName: default-scheduler
+      enableServiceLinks: true
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: redis-data
+        creationTimestamp: null
+        labels:
+          app.kubernetes.io/component: master
+          app.kubernetes.io/instance: argo-cd-1758916987
+          app.kubernetes.io/name: redis
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+        storageClassName: local-storage
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  serviceName: argo-cd-1758916987-redis-headless
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+  revisionHistoryLimit: 10
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
