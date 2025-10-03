@@ -44,7 +44,7 @@ spec:
           emptyDir: {}
         - name: certificate
           secret:
-            secretName: nginx-582-tls
+            secretName: nginx-1758062582-tls
             items:
               - key: tls.crt
                 path: tls.crt
