@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-1758062582
+  name: nginx-582
   namespace: default
   generation: 2
   labels:
-    app.kubernetes.io/instance: nginx-1758062582
+    app.kubernetes.io/instance: nginx-582
     app.kubernetes.io/name: nginx
     app.kubernetes.io/version: 1.29.1
     helm.sh/chart: nginx-21.1.23
   annotations:
     deployment.kubernetes.io/revision: '1'
-    meta.helm.sh/release-name: nginx-1758062582
+    meta.helm.sh/release-name: nginx-582
     meta.helm.sh/release-namespace: default
-  selfLink: /apis/apps/v1/namespaces/default/deployments/nginx-1758062582
+  selfLink: /apis/apps/v1/namespaces/default/deployments/nginx-582
 status:
   observedGeneration: 2
   replicas: 2
@@ -28,13 +28,13 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/instance: nginx-1758062582
+      app.kubernetes.io/instance: nginx-582
       app.kubernetes.io/name: nginx
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app.kubernetes.io/instance: nginx-1758062582
+        app.kubernetes.io/instance: nginx-582
         app.kubernetes.io/name: nginx
         app.kubernetes.io/version: 1.29.1
         helm.sh/chart: nginx-21.1.23
@@ -44,7 +44,7 @@ spec:
           emptyDir: {}
         - name: certificate
           secret:
-            secretName: nginx-1758062582-tls
+            secretName: nginx-582-tls
             items:
               - key: tls.crt
                 path: tls.crt
@@ -175,8 +175,8 @@ spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       dnsPolicy: ClusterFirst
-      serviceAccountName: nginx-1758062582
-      serviceAccount: nginx-1758062582
+      serviceAccountName: nginx-582
+      serviceAccount: nginx-582
       automountServiceAccountToken: false
       shareProcessNamespace: false
       securityContext:
@@ -189,7 +189,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    app.kubernetes.io/instance: nginx-1758062582
+                    app.kubernetes.io/instance: nginx-582
                     app.kubernetes.io/name: nginx
                 topologyKey: kubernetes.io/hostname
       schedulerName: default-scheduler
