@@ -4,7 +4,7 @@ metadata:
   name: web-004-1
 spec:
   serviceName: web-004-h               # tie to the headless service
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: web-004-1
