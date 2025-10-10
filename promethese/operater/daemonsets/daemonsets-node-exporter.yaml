@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "1"
+    meta.helm.sh/release-name: kube-prometheus-1759945349
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2025-10-08T17:43:02Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: kube-prometheus-1759945349
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/version: 1.9.1
+    helm.sh/chart: node-exporter-4.5.19
+  name: kube-prometheus-1759945349-node-exporter
+  namespace: default
+  resourceVersion: "569199"
+  uid: 0b000502-4475-4608-a64c-560c0837cb4f
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: kube-prometheus-1759945349
+      app.kubernetes.io/name: node-exporter
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: kube-prometheus-1759945349
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: node-exporter
+        app.kubernetes.io/version: 1.9.1
+        helm.sh/chart: node-exporter-4.5.19
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: kube-prometheus-1759945349
+                  app.kubernetes.io/name: node-exporter
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        - --web.listen-address=0.0.0.0:9100
+        - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+        - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+        image: docker.io/bitnamilegacy/node-exporter:1.9.1-debian-12-r14
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: metrics
+          timeoutSeconds: 5
+        name: node-exporter
+        ports:
+        - containerPort: 9100
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /
+            port: metrics
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 2Gi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      hostPID: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+      serviceAccount: kube-prometheus-1759945349-node-exporter
+      serviceAccountName: kube-prometheus-1759945349-node-exporter
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: empty-dir
+      - hostPath:
+          path: /proc
+          type: ""
+        name: proc
+      - hostPath:
+          path: /sys
+          type: ""
+        name: sys
+  updateStrategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+status:
+  currentNumberScheduled: 2
+  desiredNumberScheduled: 2
+  numberMisscheduled: 0
+  numberReady: 0
+  numberUnavailable: 2
+  observedGeneration: 1
+  updatedNumberScheduled: 2

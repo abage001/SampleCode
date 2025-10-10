@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: kube-prometheus-1759945349
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2025-10-08T17:43:02Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/component: blackbox-exporter
+    app.kubernetes.io/instance: kube-prometheus-1759945349
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/version: 0.85.0
+    helm.sh/chart: kube-prometheus-11.3.10
+  name: kube-prometheus-1759945349-blackbox-exporter
+  namespace: default
+  resourceVersion: "569250"
+  uid: 440fe3f6-dc22-439c-ba8a-6e3920195e70
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: blackbox-exporter
+      app.kubernetes.io/instance: kube-prometheus-1759945349
+      app.kubernetes.io/name: kube-prometheus
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 7730a2ba7a71f15d681a2321f6402be87f6571dc64fd06cf78765979fc02a871
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: blackbox-exporter
+        app.kubernetes.io/instance: kube-prometheus-1759945349
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: kube-prometheus
+        app.kubernetes.io/version: 0.85.0
+        helm.sh/chart: kube-prometheus-11.3.10
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: blackbox-exporter
+                  app.kubernetes.io/instance: kube-prometheus-1759945349
+                  app.kubernetes.io/name: kube-prometheus
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - --config.file=/bitnami/blackbox-exporter/conf/config.yml
+        - --web.listen-address=:19115
+        image: docker.io/bitnamilegacy/blackbox-exporter:0.27.0-debian-12-r4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: http
+          timeoutSeconds: 1
+        name: blackbox-exporter
+        ports:
+        - containerPort: 19115
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 2Gi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /bitnami/blackbox-exporter/conf
+          name: blackbox-exporter-config
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+      serviceAccount: kube-prometheus-1759945349-blackbox-exporter
+      serviceAccountName: kube-prometheus-1759945349-blackbox-exporter
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: empty-dir
+      - configMap:
+          defaultMode: 420
+          name: kube-prometheus-1759945349-blackbox-exporter
+        name: blackbox-exporter-config
+status:
+  conditions:
+  - lastTransitionTime: "2025-10-08T17:43:03Z"
+    lastUpdateTime: "2025-10-08T17:43:03Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  - lastTransitionTime: "2025-10-08T17:43:02Z"
+    lastUpdateTime: "2025-10-08T17:43:04Z"
+    message: ReplicaSet "kube-prometheus-1759945349-blackbox-exporter-79cb7bfb94"
+      is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
